@@ -13,11 +13,44 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 
 function normalizeGeneratedOutput(raw: string): string {
-  return raw
+  let formatted = raw
     .replace(/####\s*/g, "\n\n### ")
     .replace(/\s+###/g, "\n\n###")
     .replace(/\[Your Name\]/gi, "MediNotes Pro")
     .replace(/Best regards,\s*\n\s*MediNotes Pro/gi, "Best regards,\nMediNotes Pro");
+
+  if (!/###\s*Summary of visit for the doctor's records/i.test(formatted)) {
+    formatted = formatted.replace(
+      /summary of visit for the doctor's records/gi,
+      "### Summary of visit for the doctor's records"
+    );
+  }
+  if (!/###\s*Next steps for the doctor/i.test(formatted)) {
+    formatted = formatted.replace(
+      /next steps for the doctor/gi,
+      "### Next steps for the doctor"
+    );
+  }
+  if (!/###\s*Draft of email to patient in patient-friendly language/i.test(formatted)) {
+    formatted = formatted.replace(
+      /draft of email to patient in patient-friendly language/gi,
+      "### Draft of email to patient in patient-friendly language"
+    );
+  }
+
+  formatted = formatted
+    .replace(/(###\s*Summary of visit for the doctor's records)/gi, "\n\n$1\n\n")
+    .replace(/(###\s*Next steps for the doctor)/gi, "\n\n$1\n\n")
+    .replace(
+      /(###\s*Draft of email to patient in patient-friendly language)/gi,
+      "\n\n$1\n\n"
+    )
+    .replace(/(\d+)\.\s*/g, "\n$1. ")
+    .replace(/Subject:\s*/gi, "**Subject:** ")
+    .replace(/(\*\*Subject:\*\*[^\n]+)\s*(Dear\s)/i, "$1\n\n$2")
+    .replace(/\n{3,}/g, "\n\n");
+
+  return formatted.trim();
 }
 
 function ConsultationForm() {
@@ -103,31 +136,37 @@ function ConsultationForm() {
   }
 
   return (
-    <div className="container">
-      <h1>Consultation Notes Assistant</h1>
-      <form className="card" onSubmit={handleSubmit}>
-        <label>
+    <div className="mx-auto max-w-4xl">
+      <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900">
+        Consultation Notes Assistant
+      </h1>
+      <form
+        className="mt-4 grid gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+        onSubmit={handleSubmit}
+      >
+        <label className="grid gap-2 text-sm font-semibold text-slate-800">
           Patient Name
           <input
             required
             value={patientName}
             onChange={(e) => setPatientName(e.target.value)}
             placeholder="Enter patient full name"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
           />
         </label>
 
-        <label>
+        <label className="grid gap-2 text-sm font-semibold text-slate-800">
           Date of Visit
           <DatePicker
             selected={visitDate}
             onChange={(date: Date | null) => setVisitDate(date)}
             dateFormat="yyyy-MM-dd"
             required
-            className="input"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
           />
         </label>
 
-        <label>
+        <label className="grid gap-2 text-sm font-semibold text-slate-800">
           Consultation Notes
           <textarea
             required
@@ -135,24 +174,29 @@ function ConsultationForm() {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Write consultation notes here..."
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-blue-500 focus:outline-none"
           />
         </label>
 
-        <button className="button primary" type="submit" disabled={loading}>
+        <button
+          className="rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Generating Summary..." : "Generate Summary"}
         </button>
       </form>
 
       {errorMessage && (
-        <section className="card">
-          <p>{errorMessage}</p>
+        <section className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+          <p className="text-sm">{errorMessage}</p>
         </section>
       )}
 
       {output && (
-        <section className="card summary-card">
+        <section className="mt-5 rounded-2xl border border-slate-200 border-l-4 border-l-blue-600 bg-white p-6 shadow-sm">
           <ReactMarkdown
-            className="summary-output summary-document"
+            className="prose prose-slate max-w-none text-[0.96rem] leading-7 prose-h3:mb-2 prose-h3:mt-6 prose-h3:text-2xl prose-h3:font-bold prose-li:my-1 prose-ol:pl-6 prose-ul:pl-6"
             remarkPlugins={[remarkGfm, remarkBreaks]}
           >
             {output}
@@ -165,15 +209,17 @@ function ConsultationForm() {
 
 export default function Product() {
   return (
-    <main className="page">
-      <div className="top-right">
+    <main className="min-h-screen bg-slate-100 px-6 py-8 text-slate-900">
+      <div className="mb-4 flex justify-end">
         <UserButton showName />
       </div>
       <SignedOut>
-        <div className="container card">
-          <h1>Sign in required</h1>
+        <div className="mx-auto mt-4 grid max-w-2xl gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h1 className="text-2xl font-bold">Sign in required</h1>
           <SignInButton mode="modal">
-            <button className="button primary">Sign In to Continue</button>
+            <button className="w-fit rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700">
+              Sign In to Continue
+            </button>
           </SignInButton>
         </div>
       </SignedOut>
