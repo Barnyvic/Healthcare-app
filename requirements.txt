@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+fastapi-clerk-auth
+pydantic
+groq
+httpx
+svix
