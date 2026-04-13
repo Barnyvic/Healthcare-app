@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.7.5",
+    "@clerk/nextjs": "^6.9.12",
     "@microsoft/fetch-event-source": "^2.0.1",
     "next": "^14.2.5",
     "react": "^18.3.1",

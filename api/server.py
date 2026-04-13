@@ -225,6 +225,13 @@ if static_path.exists():
         if full_path.startswith("api/") or full_path == "health":
             raise HTTPException(status_code=404, detail="Not found")
 
+        # Clerk account UI uses nested subpaths like /account/billing.
+        # Serve the account page for any nested account route.
+        if full_path.startswith("account/"):
+            account_html = static_path / "account.html"
+            if account_html.exists():
+                return FileResponse(account_html)
+
         requested = static_path / full_path
         html_file = static_path / f"{full_path}.html"
         nested_index = static_path / full_path / "index.html"
