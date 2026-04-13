@@ -144,11 +144,7 @@ def consultation_summary(
                 text = chunk.choices[0].delta.content
                 if not text:
                     continue
-                lines = text.split("\n")
-                for line in lines[:-1]:
-                    yield f"data: {line}\n\n"
-                    yield "data:  \n\n"
-                yield f"data: {lines[-1]}\n\n"
+                yield f"data: {text}\n\n"
         except Exception as exc:
             yield f"data: Error while streaming response: {exc}\n\n"
 

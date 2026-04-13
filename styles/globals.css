@@ -91,20 +91,24 @@ textarea,
 
 .summary-card {
   border-left: 6px solid #2563eb;
+  background: #ffffff;
 }
 
 .summary-output {
-  line-height: 1.65;
-  color: #111827;
+  line-height: 1.8;
+  color: #1f2937;
+  font-size: 1.05rem;
 }
 
 .summary-output h3 {
-  margin-top: 22px;
-  margin-bottom: 10px;
-  font-size: 1.1rem;
-  color: #0f172a;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 6px;
+  margin-top: 28px;
+  margin-bottom: 12px;
+  font-size: 2rem;
+  line-height: 1.25;
+  color: #111827;
+  border-bottom: 0;
+  padding-bottom: 0;
+  font-weight: 800;
 }
 
 .summary-output p {
@@ -113,13 +117,14 @@ textarea,
 
 .summary-output ul,
 .summary-output ol {
-  margin: 10px 0 14px 22px;
+  margin: 12px 0 18px 28px;
 }
 
 .summary-output li {
-  margin-bottom: 6px;
+  margin-bottom: 10px;
+  padding-left: 6px;
 }
 
 .summary-output strong {
-  color: #0b3ea6;
+  color: #111827;
 }

@@ -14,6 +14,8 @@ import remarkGfm from "remark-gfm";
 
 function normalizeGeneratedOutput(raw: string): string {
   return raw
+    .replace(/####\s*/g, "\n\n### ")
+    .replace(/\s+###/g, "\n\n###")
     .replace(/\[Your Name\]/gi, "MediNotes Pro")
     .replace(/Best regards,\s*\n\s*MediNotes Pro/gi, "Best regards,\nMediNotes Pro");
 }
@@ -149,9 +151,8 @@ function ConsultationForm() {
 
       {output && (
         <section className="card summary-card">
-          <h2>Generated Consultation Summary</h2>
           <ReactMarkdown
-            className="summary-output"
+            className="summary-output summary-document"
             remarkPlugins={[remarkGfm, remarkBreaks]}
           >
             {output}
